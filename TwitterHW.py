@@ -37,6 +37,7 @@ def get_tweets():
     if 'umsi' in CACHE_DICTION:
         #if it is...
         print('using cached data')
+        twitter_results = CACHE_DICTION['umsi'] #grabs data from cache
     else:
         print('getting data from internet')
         twitter_results = api.user_timeline('umsi') #get it from internet
@@ -74,8 +75,8 @@ umsi_tweets = get_tweets()
 
 # 4 - Use a for loop, the cursor you defined above to execute INSERT statements, that insert the data from each of the tweets in umsi_tweets into the correct columns in each row of the Tweets database table.
 for tw in umsi_tweets:
-    tup = tw["id"], tw["user"]["screen_name"], tw["created_ai"], tw["text"], tw["retweet_count"]
-    cur.execute('INSERT INTO Tweets (tweet_id, author, time_posted, tweet_text, retweets) VALUES (7, 7, 7, 7, 7)', tup)
+    tup = tw["id"], tw["user"]["screen_name"], tw["created_at"], tw["text"], tw["retweet_count"]
+    cur.execute('INSERT INTO Tweets (tweet_id, author, time_posted, tweet_text, retweets) VALUES (?, ?, ?, ?, ?)', tup)
 
 
 #  5- Use the database connection to commit the changes to the database
@@ -93,7 +94,7 @@ print("tests for part 3")
 cur.execute("SELECT time_posted, tweet_text FROM Tweets")
 all_res = cur.fetchall()
 for t in all_res:
-    print(t(0) + "-" + t(1) + "\n")
+    print(t[0] + "-" + t[1] + "\n")
 
 # Select the author of all of the tweets (the full rows/tuples of information) that have been retweeted MORE
 # than 2 times, and fetch them into the variable more_than_2_rts.
